@@ -34,7 +34,7 @@ public class HelloController {
   @RequestMapping(value = "/students/{studentId}", method = RequestMethod.GET)
   @ResponseBody
   public ResponseEntity<Student> getStudent(@PathVariable("studentId") long id,
-                                            @RequestParam("name") String name,
+                                            @RequestParam(value = "name", required = false) String name,
                                             @RequestParam(value = "age", required = false) Integer age) {
     Student s1 = studentService.getStudent(id);
     return new ResponseEntity<>(s1, HttpStatus.OK);
