@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,13 +23,17 @@ public class HelloController {
     return "Greetings from Spring Boot!";
   }
 
-  @RequestMapping(value = "/students", method = RequestMethod.POST)
+  @RequestMapping(value = "/students", method = RequestMethod.POST, consumes = "application/json")
   public ResponseEntity addStudent(@RequestBody Student student) throws URISyntaxException {
     studentService.addStudent(student);
     HttpHeaders httpHeaders = new HttpHeaders();
-    httpHeaders.setLocation(new URI("/apps/students/"+student.getId()));
-    return new ResponseEntity(httpHeaders, HttpStatus.ACCEPTED);
+    URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+        .path("/{id}")
+        .buildAndExpand(student.getId())
+        .toUri();
 
+    httpHeaders.setLocation(location);
+    return new ResponseEntity(location, HttpStatus.ACCEPTED);
   }
 
   @RequestMapping(value = "/students/{studentId}", method = RequestMethod.PUT)
@@ -48,7 +53,7 @@ public class HelloController {
     return new ResponseEntity<>(s1, HttpStatus.OK);
   }
 
-  @RequestMapping(value = "/students", method = RequestMethod.GET)
+  @RequestMapping(value = "/students", method = RequestMethod.GET, produces = "application/json")
   @ResponseBody
   public ResponseEntity<List<Student>> getStudents(@RequestParam(value = "name", required = false) String name,
                                                    @RequestParam(value = "age", required = false) Integer age) {
