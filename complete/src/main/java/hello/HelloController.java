@@ -31,18 +31,27 @@ public class HelloController {
 
   }
 
+  @RequestMapping(value = "/students/{studentId}", method = RequestMethod.PUT)
+  @ResponseBody
+  public ResponseEntity<Student> addStudent(@PathVariable("studentId") long id,
+                                            @RequestBody Student student)  {
+    student.setId(id);
+    studentService.addStudent(student);
+    return new ResponseEntity(student, HttpStatus.OK);
+
+  }
+
   @RequestMapping(value = "/students/{studentId}", method = RequestMethod.GET)
   @ResponseBody
-  public ResponseEntity<Student> getStudent(@PathVariable("studentId") long id,
-                                            @RequestParam(value = "name", required = false) String name,
-                                            @RequestParam(value = "age", required = false) Integer age) {
+  public ResponseEntity<Student> getStudent(@PathVariable("studentId") long id) {
     Student s1 = studentService.getStudent(id);
     return new ResponseEntity<>(s1, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/students", method = RequestMethod.GET)
   @ResponseBody
-  public ResponseEntity<List<Student>> getStudents() {
+  public ResponseEntity<List<Student>> getStudents(@RequestParam(value = "name", required = false) String name,
+                                                   @RequestParam(value = "age", required = false) Integer age) {
     List<Student> students = studentService.getStudents();
     return new ResponseEntity<>(students, HttpStatus.OK);
   }
