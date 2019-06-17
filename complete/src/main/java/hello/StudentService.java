@@ -2,7 +2,9 @@ package hello;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -31,6 +33,14 @@ public class StudentService {
     printStudent();
     return students.get(id);
   }
+
+  public List<Student> getStudents(){
+    printStudent();
+    return new ArrayList<Student>(students.values());
+  }
+
+
+
   public void printStudent(){
     System.out.println("Printing Students : ");
     for(long studentId : students.keySet()){

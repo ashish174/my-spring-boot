@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/apps")
@@ -31,9 +32,26 @@ public class HelloController {
   }
 
   @RequestMapping(value = "/students/{studentId}", method = RequestMethod.GET)
-  public Student getStudent(@PathVariable("studentId") long id) {
+  @ResponseBody
+  public ResponseEntity<Student> getStudent(@PathVariable("studentId") long id,
+                                            @RequestParam("name") String name,
+                                            @RequestParam(value = "age", required = false) Integer age) {
     Student s1 = studentService.getStudent(id);
-    return s1;
+    return new ResponseEntity<>(s1, HttpStatus.OK);
+  }
+
+  @RequestMapping(value = "/students", method = RequestMethod.GET)
+  @ResponseBody
+  public ResponseEntity<List<Student>> getStudents() {
+    List<Student> students = studentService.getStudents();
+    return new ResponseEntity<>(students, HttpStatus.OK);
+  }
+
+  @RequestMapping(value = "/students/{studentId}", method = RequestMethod.DELETE)
+  public ResponseEntity removeStudent(@PathVariable("studentId") long id) {
+    studentService.removeStudent(id);
+    HttpHeaders headers = new HttpHeaders();
+    return new ResponseEntity<>(headers, HttpStatus.OK);
   }
 
 
