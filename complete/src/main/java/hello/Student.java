@@ -9,6 +9,7 @@ public class Student {
   private static int idCount = 1000;
 
   public Student() {
+    this.id = idCount++;
   }
 
   public Student(String name, int age) {
